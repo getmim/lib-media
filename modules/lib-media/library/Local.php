@@ -89,13 +89,16 @@ class Local implements \LibMedia\Iface\Handler
 
         $result->none = $url_base . '/' . $opt->file;
         $file_abs     = $base . '/' . $opt->file;
+        $file_ori_abs = $result->base;
+
+        $result->base = $file_abs;
 
         if(is_file($file_abs))
             return self::makeWebP($result);
 
         // resize the image
         $image = (new SimpleImage)
-            ->fromFile($result->base)
+            ->fromFile($file_ori_abs)
             ->bestFit($t_width, $t_height);
 
         $c_width  = $image->getWidth();
@@ -111,8 +114,6 @@ class Local implements \LibMedia\Iface\Handler
             ->fromNew($t_width, $t_height, '#CECECE')
             ->overlay($image, 'center')
             ->toFile($file_abs);
-            
-        $result->base = $file_abs;
 
         return self::makeWebP($result);
     }

@@ -85,7 +85,7 @@ Aksi diatas akan mengembalikan url file gambar untuk ukuran gambar lebar 100 dan
 mendapatkan file webp, gunakan perintah seperti di bawah:
 
 ```php
-$field->_webp;
+$field->webp;
 $field->_100x50->webp;
 ```
 

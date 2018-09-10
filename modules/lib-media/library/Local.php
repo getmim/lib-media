@@ -14,18 +14,19 @@ class Local implements \LibMedia\Iface\Handler
 {
 
     private static function compress(object $result): object{
-        if(module_exists('lib-compress')){
-            // brotli
-            $brotli_base = $result->base . '.br';
-            if(!is_file($brotli_base))
-                Compressor::brotli($result->base, $brotli_base);
+        if(!module_exists('lib-compress'))
+            return $result;
 
-            // gzip
-            $gzip_base = $result->base . '.gz';
-            if(!is_file($gzip_base))
-                Compressor::gzip($result->base, $gzip_base);
-        }
+        // brotli
+        $brotli_base = $result->base . '.br';
+        if(!is_file($brotli_base))
+            Compressor::brotli($result->base, $brotli_base);
 
+        // gzip
+        $gzip_base = $result->base . '.gz';
+        if(!is_file($gzip_base))
+            Compressor::gzip($result->base, $gzip_base);
+        
         return $result;
     }
 

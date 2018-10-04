@@ -12,6 +12,8 @@ use LibMedia\Object\Media as _Media;
 class Media
 {
     static function single($value, string $field, object $object, object $format, $options){
+        if(!$value)
+            return null;
         return new _Media($value);
     }
 
@@ -19,8 +21,11 @@ class Media
         $sep = $format->separator ?? PHP_EOL;
         $vals = explode($sep, $value);
         $result = [];
-        foreach($vals as $val)
-            $result[] = new _Media(trim($val));
+        foreach($vals as $val){
+            $val = trim($val);
+            if($val)
+                $result[] = new _Media($val);
+        }
         return $result;
     }
 }

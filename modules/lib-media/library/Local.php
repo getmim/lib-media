@@ -14,23 +14,13 @@ class Local implements \LibMedia\Iface\Handler
 {
 
     private static function compress(object $result): object{
-        if(!module_exists('lib-compress'))
-            return $result;
-
-        // brotli
-        $brotli_base = $result->base . '.br';
-        if(!is_file($brotli_base))
-            Compressor::brotli($result->base, $brotli_base);
-
-        // gzip
-        $gzip_base = $result->base . '.gz';
-        if(!is_file($gzip_base))
-            Compressor::gzip($result->base, $gzip_base);
-        
         return $result;
     }
 
     private static function makeWebP(object $result): object{
+        if(!preg_match('!\.png$!i', $result->none))
+            return self::compress($result);
+
         $file_abs_webp = $result->base . '.webp';
         if(!is_file($file_abs_webp)){
             (new SimpleImage)

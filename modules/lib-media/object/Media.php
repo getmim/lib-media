@@ -51,6 +51,9 @@ class Media implements \JsonSerializable
     }
 
     public function __get($name){
+        if($name === 'target')
+            return $this->target ?? null;
+
         if($name === 'value')
             return $this->file;
 

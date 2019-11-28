@@ -35,21 +35,34 @@ class Local implements \LibMedia\Iface\Handler
     }
 
     static function get(object $opt): ?object {
-        $base = \Mim::$app->config->libUpload->base->local ?? 'media';
-        if(substr($base,0,1) != '/')
-            $base = realpath(BASEPATH . '/' . $base);
+        $base = \Mim::$app->config->libUpload->base ?? null;
+        if(!$base)
+            $base = (object)['local'=>'media','host'=>''];
 
-        $file_abs = $base . '/' . $opt->file;
+        $base_file = $opt->file;
+
+        if($base->host){
+            $host_len = strlen($base->host);
+            $file_host= substr($opt->file, 0, $host_len);
+            if($file_host != $base->host)
+                return null;
+
+            $base_file = substr($opt->file, $host_len);
+        }
+
+        if(substr($base->local,0,1) != '/')
+            $base->local = realpath(BASEPATH . '/' . $base);
+
+        $file_abs = $base->local . '/' . $base_file;
         if(!is_file($file_abs))
             return null;
 
         $file_mime  = mime_content_type($file_abs);
-        $url_base   = substr($base, strlen(BASEPATH));
         $is_image   = fnmatch('image/*', $file_mime);
 
         $result = (object)[
             'base' => $file_abs,
-            'none' => $url_base . '/' . $opt->file
+            'none' => $base->host . $base_file
         ];
 
         if(!$is_image)
@@ -76,10 +89,10 @@ class Local implements \LibMedia\Iface\Handler
             return self::makeWebP($result);
 
         $suffix       = '_' . $t_width . 'x' . $t_height;
-        $opt->file    = preg_replace('!\.[a-zA-Z]+$!', $suffix . '$0', $opt->file);
+        $base_file    = preg_replace('!\.[a-zA-Z]+$!', $suffix . '$0', $base_file);
 
-        $result->none = $url_base . '/' . $opt->file;
-        $file_abs     = $base . '/' . $opt->file;
+        $result->none = $base->host . $base_file;
+        $file_abs     = $base->local . '/' . $base_file;
         $file_ori_abs = $result->base;
 
         $result->base = $file_abs;

@@ -20,7 +20,7 @@ class Media implements \JsonSerializable
         $this->height = $height;
         $this->width  = $width;
 
-        $handler = \Mim::$app->config->libMedia->handler;
+        $handlers = \Mim::$app->config->libMedia->handlers;
         $hdl_opts = (object)[
             'file' => $file
         ];
@@ -33,7 +33,12 @@ class Media implements \JsonSerializable
         if($height)
             $hdl_opts->size->height = $height;
 
-        $result = $handler::get($hdl_opts);
+        $result = null;
+        foreach($handlers as $name => $class){
+            $result = $class::get($hdl_opts);
+            if($result)
+                break;
+        }
 
         if(!$result)
             return;

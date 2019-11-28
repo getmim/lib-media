@@ -13,12 +13,15 @@ mim app install lib-media
 ## Konfigurasi
 
 Tambahkan konfigurasi seperti di bawah pada aplikasi/module untuk menentukan
-handler yang akan digunakan untuk menangani file handler.
+handler yang akan digunakan untuk menangani file. Masing-masing handler akan
+dipanggil sampai menemukan handler yang tidak mengembalikan nilai null.
 
 ```php
 return [
     'libMedia' => [
-        'handler' => 'Class'
+        'handlers' => [
+            'name' => 'Class'
+        ]
     ]
 ];
 ```

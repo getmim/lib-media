@@ -49,9 +49,9 @@ class Local implements \LibMedia\Iface\Handler
 
             $base_file = substr($opt->file, $host_len);
         }
-
+        
         if(substr($base->local,0,1) != '/')
-            $base->local = realpath(BASEPATH . '/' . $base);
+            $base->local = realpath(BASEPATH . '/' . $base->local);
 
         $file_abs = $base->local . '/' . $base_file;
         if(!is_file($file_abs))

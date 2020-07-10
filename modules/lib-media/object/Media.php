@@ -43,7 +43,7 @@ class Media implements \JsonSerializable
         if(!$result)
             return;
 
-        $this->target = $result->none;
+        $this->target = $this->target_webp = $result->none;
         if(isset($result->webp))
             $this->target_webp = $result->webp;
 

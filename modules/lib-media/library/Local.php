@@ -103,22 +103,9 @@ class Local implements \LibMedia\Iface\Handler
         // resize the image
         $image = (new SimpleImage)
             ->fromFile($file_ori_abs)
-            ->bestFit($t_width, $t_height);
-
-        $c_width  = $image->getWidth();
-        $c_height = $image->getHeight();
-
-        if($c_width == $t_width && $c_height == $t_height){
-            $image->toFile($file_abs);
-            return self::makeWebP($result);
-        }
-
-        // add grey background if the image size is not equal to requested one
-        $image = (new SimpleImage)
-            ->fromNew($t_width, $t_height, '#CECECE')
-            ->overlay($image, 'center')
+            ->thumbnail($t_width, $t_height)
             ->toFile($file_abs);
-
+            
         return self::makeWebP($result);
     }
 }

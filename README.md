@@ -102,6 +102,6 @@ dengan suatu separator.
 ```php
 'field' => [
     'type' => 'media-list',
-    'separator' => ',' // PHP_EOL, |
+    'separator' => ',' // PHP_EOL, |, json
 ]
 ```

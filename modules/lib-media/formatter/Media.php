@@ -19,7 +19,11 @@ class Media
 
     static function multiple($value, string $field, object $object, object $format, $options){
         $sep = $format->separator ?? PHP_EOL;
-        $vals = explode($sep, $value);
+        if($sep == 'json')
+            $vals = json_decode($value);
+        else
+            $vals = explode($sep, $value);
+        
         $result = [];
         foreach($vals as $val){
             $val = trim($val);

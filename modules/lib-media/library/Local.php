@@ -17,9 +17,40 @@ class Local implements \LibMedia\Iface\Handler
         return $result;
     }
 
-    private static function makeWebP(object $result): object{
+    private static function imageCompress(object $result): object{
+        if( $webp = self::makeWebP($result) )
+            $result->webp = $webp;
+        if( $jp2  = self::makeJp2($result) )
+            $result->jp2  = $jp2;
+
+        return self::compress($result);
+    }
+
+    private static function makeJp2(object $result): ?string{
+        if(!class_exists('Imagick'))
+            return null;
+
+        if(!preg_match('!\.jpe?g$!i', $result->none))
+            return null;
+
+        // not yet fully supported
+        // $file_abs_jp2 = $result->base . '.jp2';
+        // if(!is_file($file_abs_jp2)){
+        //     $img = new \Imagick($result->base);
+        //     $img->setImageFormat("jp2");
+        //     $img->setOption('jp2:quality', 40);
+        //     $img->writeImage($file_abs_jp2);
+        // }
+
+        // if(is_file($file_abs_jp2))
+        //     return $result->none . '.jp2';
+        
+        return null;
+    }
+
+    private static function makeWebP(object $result): ?string{
         if(!preg_match('!\.png$!i', $result->none))
-            return self::compress($result);
+            return null;
 
         $file_abs_webp = $result->base . '.webp';
         if(!is_file($file_abs_webp)){
@@ -29,9 +60,8 @@ class Local implements \LibMedia\Iface\Handler
         }
 
         if(is_file($file_abs_webp))
-            $result->webp = $result->none . '.webp';
-
-        return self::compress($result);
+            return $result->none . '.webp';
+        return null;
     }
 
     static function get(object $opt): ?object {
@@ -75,7 +105,7 @@ class Local implements \LibMedia\Iface\Handler
         ];
 
         if(!isset($opt->size))
-            return self::makeWebP($result);
+            return self::imageCompress($result);
 
         $t_width = $opt->size->width ?? null;
         $t_height= $opt->size->height ?? null;
@@ -86,7 +116,7 @@ class Local implements \LibMedia\Iface\Handler
             $t_height = ceil($i_height * $t_width / $i_width);
 
         if($t_width == $i_width && $t_height == $i_height)
-            return self::makeWebP($result);
+            return self::imageCompress($result);
 
         $suffix       = '_' . $t_width . 'x' . $t_height;
         $base_file    = preg_replace('!\.[a-zA-Z]+$!', $suffix . '$0', $base_file);
@@ -98,7 +128,7 @@ class Local implements \LibMedia\Iface\Handler
         $result->base = $file_abs;
 
         if(is_file($file_abs))
-            return self::makeWebP($result);
+            return self::imageCompress($result);
 
         // resize the image
         $image = (new SimpleImage)
@@ -106,6 +136,6 @@ class Local implements \LibMedia\Iface\Handler
             ->thumbnail($t_width, $t_height)
             ->toFile($file_abs);
             
-        return self::makeWebP($result);
+        return self::imageCompress($result);
     }
 }

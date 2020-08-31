@@ -11,6 +11,7 @@ class Media implements \JsonSerializable
 {
     private $target;
     private $target_webp;
+    private $target_jp2;
     private $file;
     private $width;
     private $height;
@@ -43,9 +44,11 @@ class Media implements \JsonSerializable
         if(!$result)
             return;
 
-        $this->target = $this->target_webp = $result->none;
+        $this->target = $result->none;
         if(isset($result->webp))
             $this->target_webp = $result->webp;
+        if(isset($result->jp2))
+            $this->target_jp2  = $result->jp2;
 
         if(isset($result->size)){
             if(isset($result->size->width))
@@ -62,9 +65,16 @@ class Media implements \JsonSerializable
         if($name === 'value')
             return $this->file;
 
-        if($name === 'webp')
-            return $this->target_webp;
-        
+        if(in_array($name, ['webp', 'jp2'])){
+            $other = $name == 'webp' ? 'jp2' : 'webp';
+
+            if($this->{'target_' . $name})
+                return $this->{'target_' . $name};
+            if($this->{'target_' . $other})
+                return $this->{'target_' . $other};
+            return $this->target;
+        }
+
         if(substr($name, 0, 1) === '_'){
             if(false === strstr($name, 'x'))
                 $name.= 'x';

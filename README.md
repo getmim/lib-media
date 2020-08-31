@@ -54,6 +54,7 @@ Fungsi tersebut diharapkan mengembalikan data seperti berikut:
 return (object)[
     'none' => 'http://target.aa/bb/dd/filename_100x150.jpg',
     'webp' => 'http://target.aa/bb/dd/filename_100x150.jpg.webp',
+    'jp2'  => 'http://target.aa/bb/dd/filename_100x150.jpg.jp2',
     'size' => [
         'width' => 100,
         'height' => 150

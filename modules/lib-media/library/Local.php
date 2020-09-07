@@ -87,8 +87,11 @@ class Local implements \LibMedia\Iface\Handler
         if(!is_file($file_abs))
             return null;
 
-        $file_mime  = mime_content_type($file_abs);
-        $is_image   = fnmatch('image/*', $file_mime);
+        $file_ext = explode('.', $file_abs);
+        $file_ext = end($file_ext);
+        $file_ext = strtolower($file_ext);
+
+        $is_image  = in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp']);
 
         $result = (object)[
             'base' => $file_abs,

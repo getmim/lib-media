@@ -13,20 +13,20 @@ use \LibCompress\Library\Compressor;
 class Local implements \LibMedia\Iface\Handler
 {
 
-    private static function compress(object $result): object{
+    private static function compress(object $result, bool $force=false): object{
         return $result;
     }
 
-    private static function imageCompress(object $result): object{
-        if( $webp = self::makeWebP($result) )
+    private static function imageCompress(object $result, bool $force=false): object{
+        if( $webp = self::makeWebP($result, $force) )
             $result->webp = $webp;
-        if( $jp2  = self::makeJp2($result) )
-            $result->jp2  = $jp2;
+        // if( $jp2  = self::makeJp2($result, $force) )
+            // $result->jp2  = $jp2;
 
         return self::compress($result);
     }
 
-    private static function makeJp2(object $result): ?string{
+    private static function makeJp2(object $result, bool $force=false): ?string{
         if(!class_exists('Imagick'))
             return null;
 
@@ -48,9 +48,12 @@ class Local implements \LibMedia\Iface\Handler
         return null;
     }
 
-    private static function makeWebP(object $result): ?string{
+    private static function makeWebP(object $result, bool $force=false): ?string{
         if(!preg_match('!\.png$!i', $result->none))
             return null;
+
+        if(!$force && module_exists('media-sizer'))
+            return $result->none . '.webp';
 
         $file_abs_webp = $result->base . '.webp';
         if(!is_file($file_abs_webp)){
@@ -65,6 +68,9 @@ class Local implements \LibMedia\Iface\Handler
     }
 
     static function get(object $opt): ?object {
+        if(!isset($opt->force))
+            $opt->force = false;
+
         $base = \Mim::$app->config->libUpload->base ?? null;
         if(!$base)
             $base = (object)['local'=>'media','host'=>''];
@@ -99,16 +105,16 @@ class Local implements \LibMedia\Iface\Handler
         ];
 
         if(!$is_image)
-            return self::compress($result);
+            return self::compress($result, $opt->force);
+
+        if(!isset($opt->size))
+            return self::imageCompress($result, $opt->force);
 
         list($i_width, $i_height) = getimagesize($file_abs);
         $result->size = (object)[
             'width'  => $i_width,
             'height' => $i_height
         ];
-
-        if(!isset($opt->size))
-            return self::imageCompress($result);
 
         $t_width = $opt->size->width ?? null;
         $t_height= $opt->size->height ?? null;
@@ -119,7 +125,7 @@ class Local implements \LibMedia\Iface\Handler
             $t_height = ceil($i_height * $t_width / $i_width);
 
         if($t_width == $i_width && $t_height == $i_height)
-            return self::imageCompress($result);
+            return self::imageCompress($result, $opt->force);
 
         $suffix       = '_' . $t_width . 'x' . $t_height;
         $base_file    = preg_replace('!\.[a-zA-Z]+$!', $suffix . '$0', $base_file);
@@ -131,14 +137,16 @@ class Local implements \LibMedia\Iface\Handler
         $result->base = $file_abs;
 
         if(is_file($file_abs))
-            return self::imageCompress($result);
+            return self::imageCompress($result, $opt->force);
 
-        // resize the image
-        $image = (new SimpleImage)
-            ->fromFile($file_ori_abs)
-            ->thumbnail($t_width, $t_height)
-            ->toFile($file_abs);
+        if($opt->force || !module_exists('media-sizer')){
+            // resize the image
+            $image = (new SimpleImage)
+                ->fromFile($file_ori_abs)
+                ->thumbnail($t_width, $t_height)
+                ->toFile($file_abs);
+        }
             
-        return self::imageCompress($result);
+        return self::imageCompress($result, $opt->force);
     }
 }

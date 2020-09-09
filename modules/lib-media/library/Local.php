@@ -97,7 +97,7 @@ class Local implements \LibMedia\Iface\Handler
         $file_ext = end($file_ext);
         $file_ext = strtolower($file_ext);
 
-        $is_image  = in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp']);
+        $is_image  = in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']);
 
         $result = (object)[
             'base' => $file_abs,

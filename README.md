@@ -31,7 +31,42 @@ return [
 Untuk membuatkan file handler, pastikan class tersebut mengimplementasikan
 interface `LibMedia\Iface\Handler`. Dan tambahkan method seperti di bawah:
 
-### get(object $file): ?object
+### static function getLocalPath(string $path): ?string
+
+Download file dari storage untuk di proses di lokal ketika lazy sizer bernilai
+false. Fungsi ini mengharapkan pengembalian nilai path ke lokal file dimana
+file didownload.
+
+### static function getPath(string $url): ?string
+
+Fungsi untuk mengidentifikasi kalau file tersebut dikenali dan bisa diproses
+oleh handler ini. Fungsi ini harus mengembalikan path file sesuai dengan yang
+ada pada tabel `media` property `path` jika file dikenali, atau `null` jika
+tidak dikenali.
+
+### static function isLazySizer(string $path, $width, $height, $compress): ?string
+
+Adalah fungsi untuk mengecek jika proses resize/compress akan dilakukan dengan metode
+lazy atau tidak, jika tidak, maka fungsi ini harus mengembalikan nilai `null`. Jika
+ia, maka fungsi ini diharapkan mengembalika nilai lazy resize/compress URL yang akan
+digunakan oleh frontend.
+
+### static function upload(string $local, string $name): ?string
+
+Upload file kembali ke remote ketika selesai diproses di lokal. Fungsi ini 
+diharapkan mengembalikan final URL ke file tersebut.
+
+
+
+
+
+
+
+
+
+
+
+### get(object $opt): ?object
 
 Fungsi yang akan dipanggil untuk menggenerasi file compresi, dan resizes. Method
 ini akan di panggil dengan parameter seperti di bawah:
@@ -54,7 +89,6 @@ Fungsi tersebut diharapkan mengembalikan data seperti berikut:
 return (object)[
     'none' => 'http://target.aa/bb/dd/filename_100x150.jpg',
     'webp' => 'http://target.aa/bb/dd/filename_100x150.jpg.webp',
-    'jp2'  => 'http://target.aa/bb/dd/filename_100x150.jpg.jp2',
     'size' => [
         'width' => 100,
         'height' => 150

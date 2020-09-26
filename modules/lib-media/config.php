@@ -2,7 +2,7 @@
 
 return [
     '__name' => 'lib-media',
-    '__version' => '0.3.1',
+    '__version' => '1.0.0',
     '__git' => 'git@github.com:getmim/lib-media.git',
     '__license' => 'MIT',
     '__author' => [
@@ -17,6 +17,9 @@ return [
         'required' => [
             [
                 'lib-image' => NULL
+            ],
+            [
+                'lib-model' => NULL
             ]
         ],
         'optional' => [
@@ -48,26 +51,28 @@ return [
             'LibMedia\\Object' => [
                 'type' => 'file',
                 'base' => 'modules/lib-media/object'
+            ],
+            'LibMedia\\Model' => [
+                'type' => 'file',
+                'base' => 'modules/lib-media/model'
             ]
         ],
         'files' => []
     ],
-
     'libMedia' => [
         'handlers' => [
             'local' => 'LibMedia\\Library\\Local'
         ]
     ],
-
     'libFormatter' => [
         'handlers' => [
             'media' => [
                 'handler' => 'LibMedia\\Formatter\\Media::single',
-                'collective' => false
+                'collective' => TRUE
             ],
             'media-list' => [
                 'handler' => 'LibMedia\\Formatter\\Media::multiple',
-                'collective' => false
+                'collective' => '_MD5_'
             ]
         ]
     ]

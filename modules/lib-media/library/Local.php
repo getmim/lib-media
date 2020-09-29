@@ -43,8 +43,8 @@ class Local implements \LibMedia\Iface\Handler
         return null;
     }
 
-    static function isLazySizer(string $path, int $width=null, int $height=null, string $compress=null): ?string{
-        if(!module_exists('media-sizer'))
+    static function getLazySizer(string $path, int $width=null, int $height=null, string $compress=null, bool $force=false): ?string{
+        if(!module_exists('media-sizer') || $force)
             return null;
 
         $base = \Mim::$app->config->libUpload->base ?? null;

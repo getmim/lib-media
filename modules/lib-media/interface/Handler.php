@@ -25,13 +25,15 @@ interface Handler
     static function getLocalPath(string $path): ?string;
 
     /**
-     * Check if the file should be resize/compress lazyly ( with media-sizer or other )
+     * Get lazy sizer for the media
      * @param string $path Path key of the media
      * @param int $width Target width, null for original
      * @param int $height Target height, null for original
      * @param string $compress Target compression, it can be null for original
+     * @param bool $force Force to return null.
+     * @return string Lazy URL of resize media or null on no lazy resize found
      */
-    static function isLazySizer(string $path, int $width=null, int $height=null, string $compress=null): ?string;
+    static function getLazySizer(string $path, int $width=null, int $height=null, string $compress=null, bool $force=false): ?string;
 
     /**
      * Upload local file to remote

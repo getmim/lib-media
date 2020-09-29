@@ -12,6 +12,8 @@ use LibMedia\Model\MediaSize as MSize;
 
 class Media implements \JsonSerializable
 {
+    private $force;
+
     private $handler;
     private $media;
     private $origin;
@@ -49,11 +51,10 @@ class Media implements \JsonSerializable
     }
 
     private function _manipulate(int $width=null, int $height=null, string $compress=null): ?string{
-        $handler = $this->handler->class;
-
+        $handler  = $this->handler->class;
         $used_url = null;
 
-        $lazy_url = $handler::isLazySizer($this->path, $width, $height, $compress);
+        $lazy_url = $handler::getLazySizer($this->path, $width, $height, $compress, !!$this->force);
         if($lazy_url)
             $used_url = $lazy_url;
 
@@ -141,7 +142,8 @@ class Media implements \JsonSerializable
         return $used_url;
     }
 
-    public function __construct(object $opt, int $t_width=null, int $t_height=null){
+    public function __construct(object $opt, int $t_width=null, int $t_height=null, bool $force=false){
+        $this->force   = $force;
         $this->handler = $opt->handler;
         $this->media   = $opt->media;
         $this->origin  = $opt->origin;
@@ -215,7 +217,7 @@ class Media implements \JsonSerializable
             if($width === $this->width && $height === $this->height)
                 return $this;
 
-            return new Media($this, $width, $height);
+            return new Media($this, $width, $height, $this->force);
         }
 
         return null;
@@ -227,5 +229,9 @@ class Media implements \JsonSerializable
 
     public function jsonSerialize(){
         return $this->__toString();
+    }
+
+    public function setForce(bool $force): void{
+        $this->force = $force;
     }
 }

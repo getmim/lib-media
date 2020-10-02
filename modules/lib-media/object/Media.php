@@ -231,6 +231,10 @@ class Media implements \JsonSerializable
         return $this->__toString();
     }
 
+    public function reManipulate(int $width=null, int $height=null, string $compression=null): ?string{
+        return $this->_manipulate($width, $height, $compression);
+    }
+
     public function setForce(bool $force): void{
         $this->force = $force;
     }

@@ -2,7 +2,7 @@
 /**
  * Media object format
  * @package lib-media
- * @version 0.0.1
+ * @version 1.3.0
  */
 
 namespace LibMedia\Object;
@@ -39,13 +39,13 @@ class Media implements \JsonSerializable
             return;
 
         $sizes = $this->sizes->$target;
-        
+
         if(isset($sizes->origin))
             $this->target = $sizes->origin;
 
         if(isset($sizes->webp))
             $this->target_webp = $sizes->webp;
-        
+
         if(isset($sizes->avif))
             $this->target_avif = $sizes->avif;
     }
@@ -85,7 +85,7 @@ class Media implements \JsonSerializable
                 // avif is not yet supported
                 }else{
                     return null;
-                }    
+                }
             }
 
             // 3. upload the image from /tmp ( upload )
@@ -225,6 +225,11 @@ class Media implements \JsonSerializable
 
     public function __toString(){
         return $this->target ?? '';
+    }
+
+    public function getHandlerClass(): string
+    {
+        return $this->handler->class;
     }
 
     public function jsonSerialize(){

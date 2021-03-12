@@ -2,7 +2,7 @@
 /**
  * Media format type
  * @package lib-media
- * @version 0.0.1
+ * @version 1.3.1
  */
 
 namespace LibMedia\Formatter;
@@ -85,16 +85,21 @@ class Media
             $hash  = md5($value);
             $value = json_decode($value);
             $result[$hash] = $value;
-            foreach($value as $val)
-                $file_urls[] = $val;
+
+            if($value){
+                foreach($value as $val)
+                    $file_urls[] = $val;
+            }
         }
 
         $file_fmt = self::single($file_urls, $field, $object, $format, $options);
         foreach($result as $hash => $value){
             $final_value = [];
-            foreach($value as $val){
-                if(isset($file_fmt[$val]))
-                    $final_value[] = $file_fmt[$val];
+            if($value){
+                foreach($value as $val){
+                    if(isset($file_fmt[$val]))
+                        $final_value[] = $file_fmt[$val];
+                }
             }
             $result[$hash] = $final_value;
         }

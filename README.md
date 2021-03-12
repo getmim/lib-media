@@ -53,18 +53,8 @@ digunakan oleh frontend.
 
 ### static function upload(string $local, string $name): ?string
 
-Upload file kembali ke remote ketika selesai diproses di lokal. Fungsi ini 
+Upload file kembali ke remote ketika selesai diproses di lokal. Fungsi ini
 diharapkan mengembalikan final URL ke file tersebut.
-
-
-
-
-
-
-
-
-
-
 
 ### get(object $opt): ?object
 

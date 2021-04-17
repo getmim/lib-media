@@ -46,10 +46,10 @@ tidak dikenali.
 
 ### static function isLazySizer(string $path, $width, $height, $compress): ?string
 
-Adalah fungsi untuk mengecek jika proses resize/compress akan dilakukan dengan metode
-lazy atau tidak, jika tidak, maka fungsi ini harus mengembalikan nilai `null`. Jika
-ia, maka fungsi ini diharapkan mengembalika nilai lazy resize/compress URL yang akan
-digunakan oleh frontend.
+Adalah fungsi untuk mengecek jika proses resize/compress akan dilakukan dengan
+metode lazy atau tidak, jika tidak, maka fungsi ini harus mengembalikan nilai
+`null`. Jika ia, maka fungsi ini diharapkan mengembalika nilai lazy
+resize/compress URL yang akan digunakan oleh frontend.
 
 ### static function upload(string $local, string $name): ?string
 
@@ -91,12 +91,13 @@ dan gzip untuk digunakan front-end.
 
 ## Formatter
 
-Jika module `lib-formatter` terpasang, maka module ini menambah 2 tipe format sebagai berikut:
+Jika module `lib-formatter` terpasang, maka module ini menambah 2 tipe format
+sebagai berikut:
 
 ### media
 
-Mengubah nilai suatu properti menjadi object media untuk mempermudah mendapatkan nilai-nilai
-media:
+Mengubah nilai suatu properti menjadi object media untuk mempermudah mendapatkan
+nilai-nilai media:
 
 ```php
 'field' => [
@@ -104,15 +105,15 @@ media:
 ]
 ```
 
-Objek yang dihasilkan bisa digunakan untuk mendapatkan suatu ukuran gambar atau kompresi webp dengan
-perintah seperti di bawah:
+Objek yang dihasilkan bisa digunakan untuk mendapatkan suatu ukuran gambar atau
+kompresi webp dengan perintah seperti di bawah:
 
 ```php
 $field->_100x50;
 ```
 
-Aksi diatas akan mengembalikan url file gambar untuk ukuran gambar lebar 100 dan tinggi 50. Untuk
-mendapatkan file webp, gunakan perintah seperti di bawah:
+Aksi diatas akan mengembalikan url file gambar untuk ukuran gambar lebar 100 dan
+tinggi 50. Untuk mendapatkan file webp, gunakan perintah seperti di bawah:
 
 ```php
 $field->webp;
@@ -121,8 +122,8 @@ $field->_100x50->webp;
 
 ### media-list
 
-Mengubah nilai menjadi array media. Format tipe ini mengharapkan nilai suatu properti adalah string
-dengan suatu separator.
+Mengubah nilai menjadi array media. Format tipe ini mengharapkan nilai suatu
+properti adalah string dengan suatu separator.
 
 ```php
 'field' => [

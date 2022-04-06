@@ -232,6 +232,7 @@ class Media implements \JsonSerializable
         return $this->handler->class;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize(){
         return $this->__toString();
     }

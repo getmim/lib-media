@@ -2,7 +2,7 @@
 
 return [
     '__name' => 'lib-media',
-    '__version' => '1.3.1',
+    '__version' => '1.4.0',
     '__git' => 'git@github.com:getmim/lib-media.git',
     '__license' => 'MIT',
     '__author' => [
